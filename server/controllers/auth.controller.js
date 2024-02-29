@@ -5,9 +5,9 @@ export const register = async (req, res, next) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
 
-    const isUserExist = await User.findOne({email})
-    if(isUserExist){
-      return next(errorHandler(400, "User already exist"))
+    const isUserExist = await User.findOne({ email });
+    if (isUserExist) {
+      return next(errorHandler(400, "User already exist"));
     }
 
     if (!username || !email || !password || !confirmPassword) {
@@ -22,7 +22,11 @@ export const register = async (req, res, next) => {
     const token = await newUser.generateToken();
     const expiryTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-    res.cookie("token", token, { httpOnly: true, expires: expiryTime });
+    res.cookie("token", token, {
+      expires: expiryTime,
+      sameSite: "None",
+      secure: true,
+    });
 
     const userWithOutPassword = await User.findById(newUser._id).select(
       "-password"
@@ -52,7 +56,11 @@ export const login = async (req, res, next) => {
     const token = await validEmail.generateToken();
     const expiryTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-    res.cookie("token", token, { httpOnly: true, expires: expiryTime });
+    res.cookie("token", token, {
+      expires: expiryTime,
+      sameSite: "None",
+      secure: true,
+    });
     const userWithOutPassword = await User.findById(validEmail._id).select(
       "-password"
     );
@@ -74,7 +82,11 @@ export const google = async (req, res, next) => {
       const token = await user.generateToken();
       const expiryTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-      res.cookie("token", token, { httpOnly: true, expires: expiryTime });
+      res.cookie("token", token, {
+        expires: expiryTime,
+        sameSite: "None",
+        secure: true,
+      });
 
       res.status(200).json(rest);
     } else {
@@ -90,7 +102,11 @@ export const google = async (req, res, next) => {
       const token = await newUser.generateToken();
       const expiryTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-      res.cookie("token", token, { httpOnly: true, expires: expiryTime });
+      res.cookie("token", token, {
+        expires: expiryTime,
+        sameSite: "None",
+        secure: true,
+      });
 
       const userWithOutPassword = await User.findById(newUser._id).select(
         "-password"
