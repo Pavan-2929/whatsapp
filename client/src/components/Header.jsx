@@ -34,7 +34,7 @@ function Header() {
 
       if (response.status === 200) {
         dispatch(logout());
-        dispatch(setUser(null))
+        dispatch(setUser(null));
         navigate("/login");
         toast.success("Logout Successfully", {
           style: {
@@ -66,7 +66,11 @@ function Header() {
   };
 
   return (
-    <nav className={`${isMenuOpen ? "bg-[#414141]" : ""} p-4 font-semibold`}>
+    <nav
+      className={`${
+        isMenuOpen ? "bg-[#414141]" : "bg-[#444]"
+      } p-4 font-semibold border-b-2 border-white `}
+    >
       <div className="md:flex justify-around items-center">
         <div className="text-[2rem] flex justify-around items-center relative">
           <span className="text-purple-500 animate-fire">Auth</span>

@@ -2,7 +2,10 @@ import Conversation from "../models/conversation.model.js";
 
 export const createConversation = async (req, res, next) => {
   try {
-    const newConversation = await Conversation.create({members: [req.body.senderId, req.body.receiverId]});
+    const { senderId, receiverId } = req.body.members; // Destructure members object
+    const newConversation = await Conversation.create({
+      members: [senderId, receiverId],
+    });
 
     res.status(200).json(newConversation)
   } catch (error) {
