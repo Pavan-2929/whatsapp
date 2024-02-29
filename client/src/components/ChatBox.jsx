@@ -11,7 +11,7 @@ const ChatBox = ({ message, own }) => {
       const fetchUser = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:3000/api/user/get/${message.senderId}`
+            `https://whatsapp-server-2929.onrender.com/api/user/get/${message.senderId}`
           );
           setUser(response.data);
         } catch (error) {

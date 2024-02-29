@@ -8,7 +8,7 @@ const OnlineUsersModal = ({ isOnlineUsers, toggleOnlineModal }) => {
     const fetchUserData = async (id) => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/user/get/${id}`
+          `https://whatsapp-server-2929.onrender.com/api/user/get/${id}`
         );
 
         setUsers((prevUsers) => {

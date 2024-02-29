@@ -28,7 +28,7 @@ const Chats = () => {
   };
 
   useEffect(() => {
-    socket.current = io("localhost:8000");
+    socket.current = io("https://whatsapp-server-2929.onrender.com");
 
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
@@ -60,7 +60,7 @@ const Chats = () => {
   const fetchConversations = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/conversation/get/${currentUser._id}`
+        `https://whatsapp-server-2929.onrender.com/api/conversation/get/${currentUser._id}`
       );
       setConversations(response.data);
     } catch (error) {
@@ -74,7 +74,7 @@ const Chats = () => {
   const fetchMessages = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/message/get/${currentChat?._id}`
+        `https://whatsapp-server-2929.onrender.com/api/message/get/${currentChat?._id}`
       );
       setMessages(response.data);
     } catch (error) {
@@ -106,7 +106,7 @@ const Chats = () => {
     });
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/message/create",
+        "https://whatsapp-server-2929.onrender.com/api/message/create",
         message
       );
       console.log(response);
@@ -125,7 +125,7 @@ const Chats = () => {
   const fetchAllusers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/user/allusers"
+        "https://whatsapp-server-2929.onrender.com/api/user/allusers"
       );
       setAllUsers(response.data);
     } catch (error) {
@@ -141,7 +141,7 @@ const Chats = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/conversation/create",
+        "https://whatsapp-server-2929.onrender.com/api/conversation/create",
         { members: { senderId: currentUser._id, receiverId: selectedUser } }
       );
       fetchConversations();

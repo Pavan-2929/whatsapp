@@ -10,7 +10,7 @@ const Conversation = ({ conversation, currentUser }) => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/user/get/${friendId}`
+          `https://whatsapp-server-2929.onrender.com/api/user/get/${friendId}`
         );
 
         // console.log(response);
