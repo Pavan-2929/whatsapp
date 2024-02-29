@@ -4,15 +4,16 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRouter from "./routes/auth.routes.js";
 import userRotuer from "./routes/user.routes.js";
-import conversationRouter from './routes/conversation.routes.js'
+import conversationRouter from "./routes/conversation.routes.js";
 import messageRouter from "./routes/message.routes.js";
 import io from "./socket.js";
 
 const app = express();
-app.use(cors({credentials: true, origin:"http://localhost:5173"}))
-app.use(express.json())
+app.use(
+  cors({ credentials: true, origin: "https://whatsapp-29.onrender.com" })
+);
+app.use(express.json());
 dotenv.config();
-
 
 const PORT = 3000 || process.env.PORT;
 
@@ -27,10 +28,10 @@ mongoose
   })
   .catch((error) => console.log(error));
 
-app.use('/api/auth', authRouter)  
-app.use('/api', userRotuer)
-app.use("/api/conversation", conversationRouter)
-app.use("/api/message", messageRouter)
+app.use("/api/auth", authRouter);
+app.use("/api", userRotuer);
+app.use("/api/conversation", conversationRouter);
+app.use("/api/message", messageRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -42,4 +43,3 @@ app.use((err, req, res, next) => {
     message,
   });
 });
-
