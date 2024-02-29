@@ -3,6 +3,7 @@ import ChatBox from "../components/ChatBox";
 import Conversation from "../components/Conversation";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 const Chats = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -13,7 +14,20 @@ const Chats = () => {
   const [showModal, setShowModal] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
+
+  const socket = useRef();
   const scrollRef = useRef();
+
+  useEffect(() => {
+    socket.current = io("localhost:8000");
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", currentUser._id);
+    socket.current.on("getUsers", (users) => {
+      console.log(users);
+    });
+  }, []);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -79,7 +93,6 @@ const Chats = () => {
       const response = await axios.get(
         "http://localhost:3000/api/user/allusers"
       );
-      console.log(response);
       setAllUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -104,8 +117,6 @@ const Chats = () => {
       console.log(error);
     }
   };
-
-  console.log(selectedUser);
 
   return (
     <div className="w-full h-[89vh] flex flex-col lg:flex-row">

@@ -6,11 +6,13 @@ import authRouter from "./routes/auth.routes.js";
 import userRotuer from "./routes/user.routes.js";
 import conversationRouter from './routes/conversation.routes.js'
 import messageRouter from "./routes/message.routes.js";
+import io from "./socket.js";
 
 const app = express();
 app.use(cors({credentials: true, origin:"http://localhost:5173"}))
 app.use(express.json())
 dotenv.config();
+
 
 const PORT = 3000 || process.env.PORT;
 
@@ -40,3 +42,4 @@ app.use((err, req, res, next) => {
     message,
   });
 });
+
