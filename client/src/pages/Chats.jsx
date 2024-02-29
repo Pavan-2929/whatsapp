@@ -4,6 +4,7 @@ import Conversation from "../components/Conversation";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { io } from "socket.io-client";
+import OnlineUsersModal from "../components/OnlineUsersModal";
 
 const Chats = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -15,9 +16,16 @@ const Chats = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState("");
+  const [isOnlineUsers, setOnlineUsers] = useState([]);
+  const [onlineModal, setOnlineModal] = useState(false);
 
   const socket = useRef();
   const scrollRef = useRef();
+
+  const toggleOnlineModal = () => {
+    setOnlineModal(!onlineModal);
+    console.log(onlineModal);
+  };
 
   useEffect(() => {
     socket.current = io("localhost:8000");
@@ -40,7 +48,8 @@ const Chats = () => {
   useEffect(() => {
     socket.current.emit("addUser", currentUser._id);
     socket.current.on("getUsers", (users) => {
-      // console.log(users);
+      setOnlineUsers(users);
+      console.log(users);
     });
   }, []);
 
@@ -137,11 +146,12 @@ const Chats = () => {
       );
       fetchConversations();
       toggleModal(false);
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
+
+  // console.log(isOnlineUsers);
 
   return (
     <div className="w-full h-[89vh] flex flex-col lg:flex-row">
@@ -154,6 +164,14 @@ const Chats = () => {
               className="text-white bg-blue-500 py-2 px-4 rounded-md my-4 mx-auto block"
             >
               Create Conversation
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={toggleOnlineModal}
+              className="text-white bg-blue-500 py-2 px-4 rounded-md my-4 mx-auto block"
+            >
+              Online Users
             </button>
           </div>
           {conversations.map((c) => (
@@ -255,6 +273,7 @@ const Chats = () => {
           </div>
         </div>
       )}
+      {onlineModal && <OnlineUsersModal isOnlineUsers={isOnlineUsers} toggleOnlineModal={toggleOnlineModal}/>}
     </div>
   );
 };

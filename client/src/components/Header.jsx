@@ -24,47 +24,6 @@ function Header() {
     setIsMenuOpen(false);
   };
 
-  const handleLogout = async () => {
-    setIsMenuOpen(false);
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/api/auth/logout",
-        { withCredentials: true }
-      );
-
-      if (response.status === 200) {
-        dispatch(logout());
-        dispatch(setUser(null));
-        navigate("/login");
-        toast.success("Logout Successfully", {
-          style: {
-            borderRadius: "10px",
-            background: "#282828",
-            color: "#fff",
-          },
-        });
-      } else {
-        toast.error("Something went wrong", {
-          style: {
-            borderRadius: "10px",
-            background: "#282828",
-            color: "#fff",
-          },
-        });
-        console.log(`Unexpected status code: ${response.status}`);
-      }
-    } catch (error) {
-      toast.error(`${error}`, {
-        style: {
-          borderRadius: "10px",
-          background: "#282828",
-          color: "#fff",
-        },
-      });
-      console.log(error);
-    }
-  };
-
   return (
     <nav
       className={`${
@@ -94,8 +53,8 @@ function Header() {
             {isLoggedIn ? (
               <>
                 <li className="md:ml-5 xl:mx-5 hover:text-purple-700">
-                  <NavLink to="/login" onClick={handleLogout}>
-                    Logout
+                  <NavLink to="/chats">
+                    Chats
                   </NavLink>
                 </li>
                 <li className="md:ml-5 xl:mx-5 hover:text-purple-700">
