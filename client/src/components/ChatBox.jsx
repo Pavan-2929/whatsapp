@@ -1,26 +1,31 @@
 import React, { useEffect, useState } from "react";
-import RegisterImage from "../assets/RegisterImage.png";
 import axios from "axios";
-import {format} from 'timeago.js'
+import { format } from "timeago.js";
 
-const ChatBox = ({message, own }) => {
-
-  const [user, setUser] = useState({})
+const ChatBox = ({ message, own }) => {
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/api/user/get/${message.senderId}`
-        );
-        setUser(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    // Fetch user data only if message is defined and has a senderId
+    if (message && message.senderId) {
+      const fetchUser = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:3000/api/user/get/${message.senderId}`
+          );
+          setUser(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-    fetchUser();
-  }, [])
+      fetchUser();
+    }
+  }, [message]);
+
+  if (!message || !message.senderId || !user) {
+    return null; // Return null if message or user data is not available yet
+  }
 
   return (
     <>

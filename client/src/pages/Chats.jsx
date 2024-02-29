@@ -14,18 +14,33 @@ const Chats = () => {
   const [showModal, setShowModal] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState("");
 
   const socket = useRef();
   const scrollRef = useRef();
 
   useEffect(() => {
     socket.current = io("localhost:8000");
+
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        senderId: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
   }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.senderId) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [currentChat, arrivalMessage]);
 
   useEffect(() => {
     socket.current.emit("addUser", currentUser._id);
     socket.current.on("getUsers", (users) => {
-      console.log(users);
+      // console.log(users);
     });
   }, []);
 
@@ -58,6 +73,10 @@ const Chats = () => {
     }
   };
 
+  const receiverId = currentChat?.members.find(
+    (member) => member != currentUser._id
+  );
+
   useEffect(() => {
     fetchMessages();
   }, [currentChat]);
@@ -71,6 +90,11 @@ const Chats = () => {
       conversationId: currentChat._id,
     };
 
+    socket.current.emit("sendMessage", {
+      senderId: currentUser._id,
+      receiverId,
+      text: newMessage,
+    });
     try {
       const response = await axios.post(
         "http://localhost:3000/api/message/create",
@@ -78,6 +102,7 @@ const Chats = () => {
       );
       console.log(response);
       setNewMessage("");
+      setMessages([...messages, newMessage]);
       fetchMessages();
     } catch (error) {
       console.log(error);
@@ -146,8 +171,8 @@ const Chats = () => {
         {currentChat ? (
           <>
             <div className="flex-1 p-4 overflow-y-auto">
-              {messages.map((m) => (
-                <div key={m._id} ref={scrollRef}>
+              {messages.map((m, index) => (
+                <div key={index} ref={scrollRef}>
                   <ChatBox message={m} own={m.senderId === currentUser._id} />
                 </div>
               ))}
