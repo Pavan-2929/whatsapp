@@ -28,7 +28,7 @@ const Chats = () => {
   };
 
   useEffect(() => {
-    socket.current = io("https://whatsapp-server-2929.onrender.com");
+    socket.current = io("https://whatsapp-1.onrender.com");
 
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
